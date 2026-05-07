@@ -1,0 +1,7 @@
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logoTT.png"     # ← Bạn phải thêm ảnh icon vào đây
+  min_sdk_android: 21
+  adaptive_icon_background: "#4CAF50"
+  adaptive_icon_foreground: "assets/logoTT.png"
