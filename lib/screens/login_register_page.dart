@@ -16,7 +16,19 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
   final _passwordController = TextEditingController();
   bool _loading = false;
 
+  // Hàm xử lý đăng nhập / đăng ký
   Future<void> _authenticate() async {
+    if (_emailController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Vui lòng nhập email và mật khẩu"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     setState(() => _loading = true);
 
     try {
@@ -35,7 +47,7 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Đăng ký thành công! Chào mừng bạn đến với "),
+              content: Text("Đăng ký thành công! Kiểm tra email để xác nhận."),
               backgroundColor: Colors.green,
             ),
           );
@@ -108,6 +120,9 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
                     fillColor: Colors.white,
                   ),
                   keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction
+                      .next, // Nhấn Enter sẽ chuyển sang mật khẩu
+                  onSubmitted: (_) => FocusScope.of(context).nextFocus(),
                 ),
 
                 const SizedBox(height: 16),
@@ -125,11 +140,15 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
                     fillColor: Colors.white,
                   ),
                   obscureText: true,
+                  textInputAction:
+                      TextInputAction.done, // Nhấn Enter sẽ thực hiện đăng nhập
+                  onSubmitted: (_) =>
+                      _authenticate(), // ← Quan trọng: Nhấn Enter = Đăng nhập
                 ),
 
                 const SizedBox(height: 40),
 
-                // Nút đăng nhập / đăng ký
+                // Nút Đăng nhập / Đăng ký
                 ElevatedButton(
                   onPressed: _loading ? null : _authenticate,
                   style: ElevatedButton.styleFrom(
@@ -153,7 +172,6 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
 
                 const SizedBox(height: 16),
 
-                // Chuyển đổi giữa Login và Register
                 TextButton(
                   onPressed: () => setState(() => isLogin = !isLogin),
                   child: Text(
